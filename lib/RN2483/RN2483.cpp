@@ -1,5 +1,5 @@
 #include "RN2483.h"
-//#define DEBUG 0
+#define DEBUG 1
 
 RN2483::RN2483(Stream* stream, Stream* debugstream, uint8_t resetPin) {
 	_resetPin = resetPin;
@@ -103,6 +103,23 @@ bool RN2483::setMacParam(char* param, char* value) {
 	return expectString("ok");
 }
 
+bool RN2483::setRadioParam(char* param, char* value) {
+	clearBufferFromModem();
+	_stream->print("radio set ");
+	_stream->print(param);
+	_stream->print(" ");
+	_stream->print(value);
+	_stream->print("\r\n");
+	#ifdef DEBUG
+		_debugstream->print("radio set ");
+		_debugstream->print(param);
+		_debugstream->print(" ");
+		_debugstream->print(value);
+		_debugstream->print("\r\n");
+	#endif
+	return expectString("ok");
+}
+
 char* RN2483::getMacParam(char* param) {
 	clearBufferFromModem();
 	_stream->print("mac get ");
@@ -124,7 +141,7 @@ bool RN2483::joinABP() {
 	_stream->print("mac join abp\r\n");
 	delay(100);
 	if(expectString("ok")) {
-		delay(10);
+		delay(1000); //doesn't require a response
 		return expectString("accepted");
 	}
 	else {
@@ -137,7 +154,7 @@ bool RN2483::joinOTAA() {
 	clearBufferFromModem();
 	_stream->print("mac join otaa\r\n");
 	if(expectString("ok")) {
-		delay(100);
+		delay(5000); //this can take a while
 		return expectString("accepted");
 	}
 	else {

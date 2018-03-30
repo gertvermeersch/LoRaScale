@@ -32,6 +32,7 @@ public:
   void resumeMac(void);
   bool send(byte* payload, uint8_t port, uint8_t len, bool cnf = false);
   bool setMacParam(char* param, char* value);
+  bool setRadioParam(char* param, char* value);
   char* getMacParam(char* param);
   bool saveMac(void);
   void handleUART(void);

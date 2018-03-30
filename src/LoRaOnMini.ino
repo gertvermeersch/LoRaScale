@@ -12,6 +12,7 @@
 #define PERIOD 37 //approx. 5 min
 #define calibration_factor_3 -217 //afwijking scale 3
 #define calibration_factor_1 -214 //afwijking scale 1
+#define DEBUG 1
 
 
 HX711 scale1(DOUT3, CLK3);
@@ -29,6 +30,7 @@ void intro() {
   softSerial.println("Date: 26/12/2017");
   // modem.setAppKey("136110f317d99f9f27808896778cca1a");
   // modem.setAppEUI("e0cf8b4d87a6ce01");
+  // modem.setMacParam("dr", "0");
   // modem.saveMac();
   softSerial.print("deveui: ");
   softSerial.println(modem.getDeveui()); 
@@ -41,6 +43,8 @@ void intro() {
 }
 
 void connectToNetwork(short retries) {
+  modem.setRadioParam("pwr", "15");
+  
   softSerial.print("joining network...");
   short max_retries = retries;
   short tryc = 1;
@@ -48,7 +52,7 @@ void connectToNetwork(short retries) {
     char disp[19];
     sprintf(disp, "attempt %2d of %2d", tryc++, max_retries);
     softSerial.println(disp);
-    delay(1000);
+    delay(10000);
   }
 }
 
